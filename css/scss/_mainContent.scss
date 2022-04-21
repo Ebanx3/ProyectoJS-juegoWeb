@@ -1,0 +1,76 @@
+body{
+    background-color: rgb(26,26,26);
+}
+.main{
+    background-color: rgb(10, 10, 10);
+    width: 84%;
+    height: 84vh;
+    display: grid;
+    margin: 8vh 8%;
+    border: 2px solid #4cccff94;
+    border-radius: 2%;
+    overflow: hidden;
+    font-family: 'Press Start 2P', cursive;
+    grid-template-areas: 
+    "juego juego historial"
+    "juego juego historial"
+    "juego juego historial"
+    "juego juego historial"
+    "instrucciones instrucciones instrucciones";
+    grid-template-columns: 1fr 1fr 30%;
+    &__juego{
+        grid-area: juego;
+        display: flex;
+        align-items: center;
+        #textoJuego{
+            color: #00f8ff;
+            margin: auto;
+            text-align: center;
+            font-size: .8rem;
+        }
+        #imgContenedor{
+            display: none;
+        }
+    }
+    &__historial{
+        grid-area: historial;
+        background-color: #031b2e;
+        color: rgb(218, 218, 218);
+        text-align: center;
+        padding: 20px;
+    }
+    &__instrucciones{
+        grid-area: instrucciones;
+        background-color: #113650;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        form{
+            text-align: center;
+            position: relative;
+            width: 70%;
+            input{
+                background-color: rgba(0, 0, 0, 0.356);
+                color: rgb(230, 230, 230);
+                height: 6vh;
+                width: 60%;
+                text-align: center;
+                font-family: 'Press Start 2P', cursive;
+            }
+            button{
+                background-color: rgba(255, 255, 255, 0.096);
+                color: white;
+                width: 30%;
+                height: 5vh;
+                font-family: 'Press Start 2P', cursive;
+            }
+            #mensajeInfo{
+                color: rgba(255, 255, 255, 0.692);
+                position: absolute;
+                top: -4vh;
+                width: 100%;
+                font-size: .8rem;
+            }
+        }
+    }
+}

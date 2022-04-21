@@ -1,0 +1,66 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box; }
+
+body {
+  background-color: #1a1a1a; }
+
+.main {
+  background-color: #0a0a0a;
+  width: 84%;
+  height: 84vh;
+  display: grid;
+  margin: 8vh 8%;
+  border: 2px solid #4cccff94;
+  border-radius: 2%;
+  overflow: hidden;
+  font-family: 'Press Start 2P', cursive;
+  grid-template-areas: "juego juego historial" "juego juego historial" "juego juego historial" "juego juego historial" "instrucciones instrucciones instrucciones";
+  grid-template-columns: 1fr 1fr 30%; }
+  .main__juego {
+    grid-area: juego;
+    display: flex;
+    align-items: center; }
+    .main__juego #textoJuego {
+      color: #00f8ff;
+      margin: auto;
+      text-align: center;
+      font-size: .8rem; }
+    .main__juego #imgContenedor {
+      display: none; }
+  .main__historial {
+    grid-area: historial;
+    background-color: #031b2e;
+    color: #dadada;
+    text-align: center;
+    padding: 20px; }
+  .main__instrucciones {
+    grid-area: instrucciones;
+    background-color: #113650;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .main__instrucciones form {
+      text-align: center;
+      position: relative;
+      width: 70%; }
+      .main__instrucciones form input {
+        background-color: rgba(0, 0, 0, 0.356);
+        color: #e6e6e6;
+        height: 6vh;
+        width: 60%;
+        text-align: center;
+        font-family: 'Press Start 2P', cursive; }
+      .main__instrucciones form button {
+        background-color: rgba(255, 255, 255, 0.096);
+        color: white;
+        width: 30%;
+        height: 5vh;
+        font-family: 'Press Start 2P', cursive; }
+      .main__instrucciones form #mensajeInfo {
+        color: rgba(255, 255, 255, 0.692);
+        position: absolute;
+        top: -4vh;
+        width: 100%;
+        font-size: .8rem; }
