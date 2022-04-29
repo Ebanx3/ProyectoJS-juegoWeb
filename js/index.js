@@ -5,188 +5,182 @@ function random(min, max) {
     return Math.floor((Math.random() * (max - min + 1)) + min);
 }
 
-//Clase PJ
-class Personaje{
-    constructor(nombre){
-        this.nombre = nombre;
-        this.lvl = 1;
-        this.hp = 50;
-        this.actualHp = 50;
-        this.dmg = 10;
-        this.def = 1;
-        this.vivo = true;
-        this.inventario = [{
-            nombre: 'pocionMenor',
-            efecto: 20,
-            precio: 10,
-            cantidad: 5
-        }]
+const items = [
+    {
+        nombre: 'pocion menor',
+        efecto: 20,
+        precio: 10
+    },
+    {
+        nombre: 'pocion',
+        efecto: 35,
+        precio: 15
+    },{
+        nombre: 'pocion mayor',
+        efecto: 60,
+        precio: 22
+    },
+    {
+        nombre: 'espada Madera',
+        efecto: 5,
+        precio: 18
+    },
+    {
+        nombre: 'espada Acero',
+        efecto: 12,
+        precio: 30
+    },
+    {
+        nombre: 'Excalibur',
+        efecto: 50,
+        precio: 90
     }
-    
-    Atacar(){
-        const num = random(1,3)/2;
-        return this.dmg * num;
-    }
+]
 
-    Cubrirse(){
-        this.def = 2;
-    }
 
-    RecibirDanio(cant){
-        let valor = Math.trunc(cant/this.def);
-        this.actualHp -= valor;
-        if(this.actualHp <= 0){
-            this.vivo = false; 
-        }
-        if(this.def==2){
-            this.def = 1;
-        }
-        return Math.trunc(valor);
-    }
-
-    ItemsInventario(objNombre){
-        //Retorna la cantidad de un objeto que hay en el inventario
-        const indice = this.inventario.findIndex(element => element.nombre == objNombre);
-        if (indice == -1){
-            return 0;
-        }
-        else{
-            return this.inventario[indice].cantidad;
-        }
-    }
-
-    PocionesInventario(){
-        const pocMn = this.ItemsInventario('pocionMenor') ;
-        const poc = this.ItemsInventario('pocion');
-        const pocMy = this.ItemsInventario('pocionMayor');
-        if (pocMn + poc + pocMy == 0){
-            return 'No tienes pociones en el inventario';
-        }
-        else{
-            let cantidadPociones = 'Tienes ';
-            if (pocMn != 0){
-                cantidadPociones = cantidadPociones + pocMn + ' pociones menores '; 
-            }
-            if (poc != 0){
-                cantidadPociones = cantidadPociones + poc + ' pociones ';
-            }
-            if (pocMy != 0){
-                cantidadPociones = cantidadPociones + pocMy + ' pociones mayores';
-            }
-            return cantidadPociones;
-        }
-        
-    }
-
-    Curar(){
-        
-        this.inventario = 
-        this.actualHp += cant;
-        if(this.actualHp > this.hp){
-            this.actualHp = this.hp;
-        }
-    }
-
-    SubirNivel(){
-        this.lvl++;
-        this.hp += 5;
-        this.dmg += 2;
-    }
-
-    NormalizarDef(){
-        this.def = 1;
-    }
-
-    AgregarItemInventario(item){
-        const ind = this.inventario.findIndex(elem => elem.nombre == item.nombre);
-        if (ind == -1){
-            this.inventario.push(item);
-            this.inventario[this.inventario.length - 1].cantidad = 1;
-        }
-        else{
-            this.inventario[ind].cantidad ++;
-        }
-    }
-
-    QuitarItemInventario(nombre){
-        console.log(this.inventario);
-        console.log('item que quiero eliminar ',nombre);
-        const indice = this.inventario.findIndex(element => element.nombre == nombre);
-        if (indice >= 0){
-            if (this.inventario[indice].cantidad > 1){
-                this.inventario[indice].cantidad --;
-            }
-            else if (this.inventario[indice].cantidad == 1){
-                this.inventario.splice(indice, 1);
-            }
-        }    
-        console.log(this.inventario);
-    }
-}
-
-//Variable que irá recibiendo los inputs del jugador
 let instruccion = '';
-let indicaciones = ['continuar'];
+const instruccionesPosibles = [true,false,false,false]; //['continuar','huir','atacar','curar']
 const textoJuego = document.getElementById('textoJuego');
-const infoInstruccion = document.getElementById('mensajeInfo')
-let nombrePJ;
-//Función que lee y asigna en instruccion el valor del input
-function LeerInstruccion(){
+const infoInstruccion = document.getElementById('mensajeInfo');
+const registroHistorial = document.getElementById('registroHistorial');
+const imgContenedor = document.getElementById('imgContenedor');
+let PJ;
+let indicacionAnterior = '';
+
+
+//FUNCIÓN QUE LEE EL INPUT DEL USUARIO Y LO ASIGNA A LA VARIABLE "instruccion" O RECHAZA EN CASO DE ESTÁR VACÍO EL INPUT
+const LeerInstruccion = () => {
     instruccion = document.getElementById('instruccionInput').value;
     document.getElementById('instruccionInput').value = '';
     if(instruccion != ''){
         comprobarInstruccion();
+    } else {
+        indicacionAnterior = infoInstruccion.innerHTML;
+        MostrarIndicaciones('Debes ingresar una instrucción válida');
+        setTimeout(()=>infoInstruccion.innerHTML= indicacionAnterior,1500); 
     }
 }
-
-function comprobarInstruccion(){
-    if(instruccion.toLowerCase() == indicaciones[0])
-        Continuar();
-    else{
-        MostrarIndicaciones('Instrucción no válida');
-        setTimeout(OcultarIndicaciones(),3000);
-    }
-}
-
-let progresoJuego = 0;
-const escenas = [0, 'nombrePJ', 'elegirNombre','intro','combate','historia', 'combate','tienda'];
-function Continuar(){
-    progresoJuego++;
-    if (escenas[progresoJuego] == 'nombrePJ'){
-        escenanombrePJ();
-    }
-    else if (escenas[progresoJuego] == 'elegirNombre'){
-        nombrePJ=instruccion;
-    }
-}
-
-
-
-function MostrarIndicaciones(Indicaciones){
-    infoInstruccion.innerHTML= Indicaciones;
-}
-
-function OcultarIndicaciones(){
-    infoInstruccion.innerHTML = '';
-}
-
-document.getElementById('boton').onclick = function (){
+document.getElementById('boton').onclick = function (e){
+    e.preventDefault();
     LeerInstruccion();
 };
 
+//GESTIÓN DE PROGRESO Y ESCENAS DEL JUEGO
+let progresoJuego = 0;
+const escenas = [0,'nombrePJ','elegirNombre','intro','intro2','combate','historia','combate','tienda'];
+const comprobarInstruccion = () =>{
 
-function MostrarTexto(texto){
-    textoJuego.innerHTML = texto;
+    if(instruccion == 'continuar' && instruccionesPosibles[0] == 1 || progresoJuego == 1){
+        Continuar()
+    }
+    else if(instruccion == 'huir' && instruccionesPosibles[1]){
+        if(progresoJuego == 3){
+            MostrarTexto('Huyes por donde viniste, demostrando ser un ser miserable ...')
+        }
+
+    }
+    else if(instruccion == 'atacar' && instruccionesPosibles[2]){
+        if(progresoJuego == 3){
+            MostrarTexto('Intentas detener al orco para que el niño consiga huir...');
+            setTimeout(escenaPrimerCombate,3000);
+        }
+    }
+    else if(instruccion == 'curar' && instruccionesPosibles[3]){
+        //curar
+    }
+    else if(instruccion == 'inventario'){
+
+    }
+    else if(instruccion == 'terminar'){
+
+    }
+    else{
+        indicacionAnterior = infoInstruccion.innerHTML;
+        MostrarIndicaciones('Debes ingresar una instrucción válida');
+        setTimeout(()=>infoInstruccion.innerHTML= indicacionAnterior,1500); 
+    }
+
 }
-function OcultarTexto(){
-    textoJuego.innerHTML = '';
+const Continuar = () =>{
+    progresoJuego++;
+
+    if(escenas[progresoJuego] == 'nombrePJ'){
+        escenanombrePJ();
+    }
+    else if(escenas[progresoJuego] == 'elegirNombre'){
+        PJ = new Personaje(instruccion);
+        escenaIntro();
+
+    }
+    else if(escenas[progresoJuego] == 'intro'){
+        escenaIntro2()
+    }
+    else if(escenas[progresoJuego] == 'intro2'){
+        escenaPrimerCombate();
+    }
 }
 
-MostrarTexto('Proyeco para el curso de JavaScript de CoderHouse <br><br> Juego de combates por turnos <br><br>github.com/Ebanx3');
-MostrarIndicaciones('Ingresa continuar...');
 
-function escenanombrePJ(){
+//FUNCIONES PARA MODIFICAR U OCULTAR TEXTO EN LA VENTANA DEL JUEGO O INDICACIONES SOBRE EL COMANDO
+const MostrarIndicaciones = (Indicaciones) => infoInstruccion.innerHTML= Indicaciones;
+const OcultarIndicaciones = () => infoInstruccion.innerHTML = '';
+const MostrarTexto = (texto) => textoJuego.innerHTML = texto;
+const OcultarTexto = () => textoJuego.innerHTML = '';
+const MostrarImg = (pathImg) => {
+    const img = document.createElement('img');
+    img.setAttribute('src', pathImg);
+    img.setAttribute('width','300px')
+    imgContenedor.setAttribute('class','dispBlock');
+    imgContenedor.appendChild(img);
+}
+
+//OBTENER ITEMS, AGREGA AL INVENTARIO Y MUESTRA EN EL HISTORIAL EL REGISTRO DEL OBJETO Y CANTIDAD OBTENIDO
+const ObtenerItem=(obj, cant)=>{
+    PJ.AgregarItemInventario(obj,cant);
+    const strRegistro = `Obtienes ${obj.nombre} x ${cant}`;
+    AgregarRegistroHistorial(strRegistro);
+}
+
+const AgregarRegistroHistorial = (string) =>{
+    let elemRegistro = document.createElement('p');
+    elemRegistro.innerHTML = string;
+    elemRegistro.setAttribute('class','elementoRegistro');
+    registroHistorial.append(elemRegistro);
+    elemRegistro.scrollIntoView({behavior:"smooth"});
+}
+
+//ESCENA PARA ESCOGER NOMBRE DE PJ
+const escenanombrePJ = () =>{
     MostrarTexto('Escoge un nombre para tu personaje');
-    MostrarIndicaciones('Ingresa el nombre de tu personaje');
+    OcultarIndicaciones();
 }
 
+//ESCENA INTRO
+const introTexto = 'Te descubres junto a un árbol, en medio de una planicie.<br><br> A menos de un metro de distancia, un bolso de cuero marrón, lo tomás y ves que tiene algunas pociones dentro <br><br> Miras a tu alrededor y ves un bosque a pocos minutos,  tienes algo de hambre y te parece buena idea ir ahí a buscar alguna fruta o baya mientras piensas que hacer después...';
+const escenaIntro = () => {
+      
+    MostrarTexto(introTexto);
+    ObtenerItem(items[0],5);
+    console.log(PJ)    
+    MostrarIndicaciones('Ingresa continuar')
+} 
+
+//
+const intro2Texto = 'Despues de haber caminado unos minutos por el bosque encuentras un árbol de frutas, decides tomar algunas y sentarte.<br><br>Apenas le das un primer mordisco ... escuchas a lo lejos un grito<br>Miras fijamente y notas a un niño corriendo en  dirección a donde tu estás y un instante despupés ves que lo sigue un orco<br><br><br>Que piensas hacer?'
+const escenaIntro2 = () => {
+    MostrarTexto(intro2Texto);
+    MostrarIndicaciones('Ingresa atacar o huir');
+    instruccionesPosibles[0]=false;
+    instruccionesPosibles[1]=true;
+    instruccionesPosibles[2]=true;
+    instruccionesPosibles[3]=false;
+}
+
+const escenaPrimerCombate= () =>{
+    MostrarImg('./img/orco.png');
+    MostrarTexto('Te enfrentas al orco');
+    instruccionesPosibles[0]=false;
+    instruccionesPosibles[1]=true;
+    instruccionesPosibles[2]=true;
+    instruccionesPosibles[3]=true;
+}

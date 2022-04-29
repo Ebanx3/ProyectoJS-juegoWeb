@@ -19,8 +19,10 @@ body {
   grid-template-areas: "juego juego historial" "juego juego historial" "juego juego historial" "juego juego historial" "instrucciones instrucciones instrucciones";
   grid-template-columns: 1fr 1fr 30%; }
   .main__juego {
+    padding: 10px;
     grid-area: juego;
     display: flex;
+    flex-direction: column;
     align-items: center; }
     .main__juego #textoJuego {
       color: #00f8ff;
@@ -34,13 +36,27 @@ body {
     background-color: #031b2e;
     color: #dadada;
     text-align: center;
-    padding: 20px; }
+    padding: 20px;
+    overflow: hidden;
+    height: 66vh; }
+    .main__historial p {
+      margin-bottom: 1vh; }
+    .main__historial #registroHistorial {
+      overflow: hidden;
+      overflow-y: auto;
+      height: 90%; }
+      .main__historial #registroHistorial .elementoRegistro {
+        background-color: #031320;
+        padding: 5px;
+        font-size: .6rem;
+        margin: 1vh auto; }
   .main__instrucciones {
     grid-area: instrucciones;
     background-color: #113650;
     display: flex;
     justify-content: center;
-    align-items: center; }
+    align-items: center;
+    height: 18vh; }
     .main__instrucciones form {
       text-align: center;
       position: relative;
@@ -64,3 +80,6 @@ body {
         top: -4vh;
         width: 100%;
         font-size: .8rem; }
+
+.dispBlock {
+  display: block !important; }

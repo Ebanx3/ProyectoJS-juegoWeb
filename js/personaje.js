@@ -12,7 +12,7 @@ class Personaje{
         this.def = 1;
         this.vivo = true;
         this.inventario = [{
-            nombre: 'pocionMenor',
+            nombre: 'pocion menor',
             efecto: 20,
             precio: 10,
             cantidad: 5
@@ -93,14 +93,14 @@ class Personaje{
         this.def = 1;
     }
 
-    AgregarItemInventario(item){
+    AgregarItemInventario(item, cant){
         const ind = this.inventario.findIndex(elem => elem.nombre == item.nombre);
         if (ind == -1){
             this.inventario.push(item);
-            this.inventario[this.inventario.length - 1].cantidad = 1;
+            this.inventario[this.inventario.length - 1].cantidad = cant;
         }
         else{
-            this.inventario[ind].cantidad ++;
+            this.inventario[ind].cantidad += cant;
         }
     }
 
@@ -119,5 +119,3 @@ class Personaje{
         console.log(this.inventario);
     }
 }
-
-export {Personaje}
